@@ -1,0 +1,15 @@
+clientUML.uxf
+
+# Server
+/server/dist
+/server/node_modules
+/server/.env
+/server/package-lock.json
+/server/package.json
+/server/tsconfig.json
+/server/src/certs
+
+# Cliente
+/cliente/node_modules
+/cliente/package-lock.json
+/cliente/package.json
