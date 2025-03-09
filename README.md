@@ -2,6 +2,33 @@
 
 ## Contenidos
 
+- [Reflexión sobre el proyecto](#reflexión-sobre-el-proyecto)
+- [Iniciación del proyecto](#iniciación-del-proyecto)
+- [Documentación](#documentación)
+    - [Servidor](#servidor)
+        - [RoomService](#roomservice)
+        - [GameService](#gameservice)
+        - [ServerService](#serverservice)
+        - [BoardBuilder](#boardbuilder)
+    - [Cliente](#cliente)
+        - [Board](#board)
+        - [Player](#player)
+        - [ConnectionHandler](#connectionhandler)
+        - [GameService](#gameservice-1)
+        - [GameController](#gamecontroller)
+        - [Queue](#queue)
+        - [Ui](#ui)
+        - [UIv1](#uiv1)
+
+## Reflexión sobre el proyecto
+
+La documentación que se expone a continuación está realizada de forma idealizada, es decir, como si el proyecto hubiera sido realizado de principio a fin de forma correcta. La realidad es que muchas de las funcionalidades no han sido implementadas e incluso algunos puntos tienen un funcionamiento erróneo.
+
+De esta forma, se debe aclarar en qué punto se encuentra el proyecto:
+- Los arbustos se generan pero no se rigen por la regla de separación de una casilla en blanco entre ellos como mínimo.
+- Los arbustos no tienen funcionalidad.
+- El jugador puede moverse y rotar del lado del cliente solamente.
+- No se ha llegado a implementar de manera funcional la gestión por parte del servidor de la posición de los jugadores, de forma que está generando un error que no permite que el proyecto se vea correctamente del lado del cliente. De esta forma, no llega a verse el movimiento de los jugadores que sí se había conseguido anteriormente.
 
 ## Iniciación del proyecto
 
