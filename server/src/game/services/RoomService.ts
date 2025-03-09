@@ -1,6 +1,6 @@
 import { Player } from "../entities/Player";
-import { ServerService } from "../../server/ServerService";
-import { Room, RoomConfig } from "./entities/Room";
+import { ServerService } from "../services/ServerService";
+import { Room, RoomConfig } from "../entities/Room";
 
 export class RoomService {
     private rooms: Room[];

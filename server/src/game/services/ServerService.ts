@@ -1,7 +1,8 @@
 import { DefaultEventsMap, Server, Socket } from 'socket.io';
 import http from 'http';
-import { GameService } from '../game/services/GameService';
+import { GameService } from './GameService';
 import { AnyTxtRecord } from 'dns';
+import { Player } from '../entities/Player';
 
 export class ServerService {
     private io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any> | null;
@@ -20,6 +21,11 @@ export class ServerService {
             {
                 type: "BYE",
                 do: this.doBye
+            },
+            //se añade la actualización de posiciones
+            {
+                type: "POSITION_UPDATE",
+                do: this.doPositionUpdate
             }
         ];
 
@@ -94,5 +100,27 @@ export class ServerService {
     private doBye(data: String) {
         console.log("Adios");
         console.log(data);
+    }
+
+    //se actualizan las posiciones iterando sobre cada jugador guardado en players[]
+    //socket.io no permite enviar players[], por lo que se envía un objeto con las posiciones de cada jugador y dentro se utiliza players[]
+    private doPositionUpdate(data: any) {
+        const players = data.players;
+        let posX : Number = 0;
+        let posY : Number = 0;
+        let playerDirection : Number = 0;
+        players.forEach((player: Player) => {
+            posX = player.x;
+            posY = player.y;
+            playerDirection = player.direction;
+        });
+        //se actualizan las x, y y dirección de cada jugador guardado en players[] dentro de la room
+        this.room.players.forEach((element) => {
+            if (element.type == 1) {
+                element.x = posX;
+                element.y = posY;
+                element.direction = playerDirection;
+            }
+        })
     }
 }

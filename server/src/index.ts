@@ -1,7 +1,7 @@
 import express, { Application, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import http from 'http';
-import { ServerService } from './server/ServerService';
+import { ServerService } from './game/services/ServerService';
 
 
 dotenv.config();

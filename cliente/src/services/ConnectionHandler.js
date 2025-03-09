@@ -33,5 +33,15 @@ export const ConnectionHandler = {
                 onDisconnectedCallBack();
             });
         })
+    },
+
+    //se envía al servidor el array player[] con las posiciones de todos los jugadores para actualizar el tablero
+    gameUpdate: (players) => {
+        ConnectionHandler.socket.emit("message", {
+            type: "POSITION_UPDATE",
+            content: {
+                players
+            }
+        });
     }
 }

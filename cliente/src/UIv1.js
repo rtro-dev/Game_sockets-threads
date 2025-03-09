@@ -22,12 +22,35 @@ UIv1.drawBoard = (board, player) => {
                 tile.style.backgroundColor = `green`;
             } else if (element === 1) {
                 tile.style.backgroundColor = `red`;
+                tile.innerHTML = `<i class="fa-solid fa-arrow-up"></i>`;
+                //para marcar al jugador actual y rotar la flecha según su dirección
+                if (player && player.status === 1) {
+                    tile.style.border = "8px solid lime";
+                    tile.style.transform = `rotate(${player.direction * 90}deg)`;
+                }
             } else if (element === 2) {
                 tile.style.backgroundColor = `yellow`;
+                tile.innerHTML = `<i class="fa-solid fa-arrow-up"></i>`;
+                if (player && player.status === 2) {
+                    tile.style.border = "8px solid lime";
+                    tile.style.transform = `rotate(${player.direction * 90}deg)`;
+                }
             } else if (element === 3) {
                 tile.style.backgroundColor = `blue`;
+                tile.style.color = `white`;
+                tile.innerHTML = `<i class="fa-solid fa-arrow-up"></i>`;
+                if (player && player.status === 3) {
+                    tile.style.border = "8px solid lime";
+                    tile.style.transform = `rotate(${player.direction * 90}deg)`;
+                }
             } else if (element === 4) {
                 tile.style.backgroundColor = `purple`;
+                tile.style.color = `white`;
+                tile.innerHTML = `<i class="fa-solid fa-arrow-up"></i>`;
+                if (player && player.status === 4) {
+                    tile.style.border = "8px solid lime";
+                    tile.style.transform = `rotate(${player.direction * 90}deg)`;
+                }
             }
             anime({
                 targets: tile,
@@ -41,29 +64,36 @@ UIv1.drawBoard = (board, player) => {
         const interfaceControl = document.createElement("div");
         interfaceControl.className = "interface";
         interfaceControl.style.position = `absolute`;
+        interfaceControl.style.left = `${(board.length * 100) + 100}px`; //se posiciona a la derecha del tablero
         interfaceControl.style.display = `flex`;
+        interfaceControl.style.flexDirection = `column`;
         interfaceControl.style.gap = `1rem`;
 
         const rotateButton = document.createElement("button");
         rotateButton.classList.add("rotate");
-        rotateButton.textContent = "rotate";
-        rotateButton.onclick = () => player.rotate();
+        /* rotateButton.textContent = "rotate"; */
+        rotateButton.innerHTML = `<i class="fa-solid fa-rotate-right"></i>`;
+        rotateButton.onclick = () => window.gameService.rotatePlayer(player);
         interfaceControl.appendChild(rotateButton);
 
         const moveButton = document.createElement("button");
         moveButton.classList.add("move");
-        moveButton.textContent = "move";
-        moveButton.onclick = () => player.move();
+        /* moveButton.textContent = "move"; */
+        moveButton.innerHTML = `<i class="fa-solid fa-up-down-left-right"></i>`;
+        moveButton.onclick = () => window.gameService.movePlayer(player);
         interfaceControl.appendChild(moveButton);
 
         const hitButton = document.createElement("button");
         hitButton.classList.add("hit");
-        hitButton.textContent = "hit";
-        hitButton.onclick = () => player.hit();
+        /* hitButton.textContent = "hit"; */
+        hitButton.innerHTML = `<i class="fa-solid fa-crosshairs"></i>`;
+        hitButton.onclick = () => window.gameService.hitPlayer(player);
         interfaceControl.appendChild(hitButton);
+
+        // se añade la interfaz al tablero
+        base.appendChild(interfaceControl);
     }
 
 }
 
 UIv1.drawBoard();
-

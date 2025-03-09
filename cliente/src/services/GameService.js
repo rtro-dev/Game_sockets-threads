@@ -1,6 +1,8 @@
 import { Board } from "../entities/Board.js";
 import { Queue } from "../Queue.js";
-import { Player } from "../entities/Player.js";
+import { Player, Directions } from "../entities/Player.js";
+//se importa ConnectionHandler para poder enviar las actualizaciones de movimiento
+import { ConnectionHandler } from "./ConnectionHandler.js";
 
 export class GameService {
     #states = {
@@ -14,6 +16,8 @@ export class GameService {
     #queue = null;
     #state = null;
     #parallel = null;
+    //para el jugfador actual
+    #player = null;
 
     #actionsList = {
         "NEW_PLAYER" : this.do_newPlayer.bind(this),
@@ -66,6 +70,7 @@ export class GameService {
         // se asigna al jugador una de las posiciones de inicio 1, 2, 3 o 4
         const playerNumber = Math.floor(Math.random() * 4) + 1;
         const newPlayer = { ...Player };
+        // se recorre el tablero para encontrar la posición del jugador
         for (let i = 0; i < this.#board.map.length; i++) {
             for (let j = 0; j < this.#board.map[i].length; j++) {
                 if (this.#board.map[i][j] === playerNumber) {
@@ -77,56 +82,72 @@ export class GameService {
             }
         }
         this.#players.push(newPlayer);
+        this.#player = newPlayer;
+        this.#ui.drawBoard(this.#board.map, this.#player);
     }
 
-    //rotación del jugador
-    rotatePlayer(player, direction) {
-        // se crea una variable para guardar el sentido de movimiento tras rotar pulsando el botón
-        let newDirection = player.direction + 1;
-        player.style.transform = "rotate(90deg)";
-
+    //obtener el jugador actual
+    get player() {
+        return this.#player;
     }
 
-    movePlayer(player, direction) {
-        if (player.state == PlayerStates.Moving) {
-            return;
+    //métodos para controlar al jugador
+    rotatePlayer(player) {
+        // se guarda la dirección tras rotar pulsando el botón
+        if (player.direction == 3) {
+            player.direction = 0;
+        } else {
+            player.direction = player.direction + 1;
+            /* player.style.transform = "rotate(90deg)"; */
         }
+        // envía la posición actualizada
+        ConnectionHandler.gameUpdate(this.#players);
+        // actualiza el tablero
+        this.#ui.drawBoard(this.#board.map, player);
+    };
 
-        player.state = PlayerStates.Moving;
-        player.direction = direction;
-
-        //se guarda la posición actual
-        let posX = Number(player.x);    //valor numérico de x
+    movePlayer(player) {
+        //se guarda la posición antes del movimiento
+        let posX = Number(player.x);
         let posY = Number(player.y);
+        //se crean las nuevas coordenadas partiendo de las antiguas
+        let newX = posX;
+        let newY = posY;
 
-        switch (direction) {    //se recuperaría la variable de rotavión y se haría el switch con eso
-            case direction.Up:
-                posY = Number(player.y) - 1;
-                if (posY >= 0) {
-                    player.y = posY;
+        switch (player.direction) {    //se recuperaría la dirección y se haría el switch con eso
+            case Directions.Up:
+                newY = Number(player.y) - 1;
+                if (newY >= 0) {
+                    player.y = newY;
+                }
+            break;
+            case Directions.Right: 
+            newX = Number(player.x) + 1;
+                if (newX < this.#board.map.length) {
+                    player.x = newX; 
                 }
                 break;
-            case direction.Down:
-                posY = Number(player.y) + 1;
-                if (posY < 10) {
-                    player.y = posY;
+            case Directions.Down:
+                newY = Number(player.y) + 1; 
+                if (newY < this.#board.map.length) {
+                    player.y = newY;
                 }
                 break;
-            case direction.Left:
-                posX = Number(player.x) - 1;
-                if (posX >= 0) {
-                    player.x = posX;
-                }
-                break;
-            case direction.Right:
-                posX = Number(player.x) + 1;
-                if (posX < 10) {
-                    player.x = posX;
+            case Directions.Left:
+                newX = Number(player.x) - 1;
+                if (newX >= 0) {
+                    player.x = newX;
                 }
                 break;
         }
-
-        player.state = PlayerStates.Idle;
+        //se pone al jugador en la nueva posición
+        this.#board.map[player.y][player.x] = player.status;
+        //se borra la posición anterior
+        this.#board.map[posY][posX] = 0;
+        // envía la posición actualizada
+        ConnectionHandler.gameUpdate(this.#players);
+        //se redibuja el tablero
+        this.#ui.drawBoard(this.#board.map, player);
     }
 
     hitPlayer(player) {

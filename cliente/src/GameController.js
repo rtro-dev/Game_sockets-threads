@@ -13,6 +13,8 @@ export class GameController {
     constructor(url, ui) {
         ui.initUI();
         this.#gameService = new GameService(ui);
+        //se utiliza window para hacer referencia al DOM que hay en pantalla, de manera que gameService se convierte en una variable global
+        window.gameService = this.#gameService;
         ConnectionHandler.init(url, this, () => {
             this.#state = this.#states.RIGHT;
         }, () => {
